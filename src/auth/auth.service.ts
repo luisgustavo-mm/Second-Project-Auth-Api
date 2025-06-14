@@ -1,12 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { SignInDto, SignUpDto } from './dtos/auth'
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { SignInDto, SignUpDto } from './dtos/auth';
 
 @Injectable()
 export class AuthService {
-    async signup(data: SignUpDto) {
-        console.log({ data });
+    constructor(private prismaService: PrismaService) {}
 
-        return 'signup';
+    async signup(data: SignUpDto) {
+        const userAlreadyExists = await this.prismaService.user.findUnique({
+            where: {
+                email: data.email,
+            },
+        });
+
+        if (userAlreadyExists) {
+            throw new UnauthorizedException('User already exists');
+        }
+        const user = await this.prismaService.user.create({ data });
+
+        return (
+            {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+            }
+        );
     }
 
     async signin(data: SignInDto) {

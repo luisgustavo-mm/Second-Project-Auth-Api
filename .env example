@@ -1,0 +1,2 @@
+DATABASE_URL="postgresql://admin:admin@localhost:5432/auth?scbema=public"
+JWT_SECRET="jwtsecret"

@@ -13,7 +13,7 @@ import { jwtConstants } from './dtos/constants';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
   })
-],
+  ],
   controllers: [AuthController],
   providers: [AuthService, PrismaService]
 })
